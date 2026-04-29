@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loan Approval Predictor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Loan Approval Predictor</h1>
+
+  <form id="loanForm">
+    <input type="number" id="age" placeholder="Age" required>
+
+    <select id="gender">
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+
+    <select id="education">
+      <option>High School</option>
+      <option>Associate's</option>
+      <option>Bachelor's</option>
+      <option>Master's</option>
+      <option>Doctoral</option>
+    </select>
+
+    <select id="marital">
+      <option>Single</option>
+      <option>Married</option>
+    </select>
+
+    <input type="number" id="income" placeholder="Income" required>
+    <input type="number" id="credit" placeholder="Credit Score" required>
+
+    <button type="submit">Predict</button>
+  </form>
+
+  <div id="result"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
