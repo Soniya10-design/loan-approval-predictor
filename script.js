@@ -1,15 +1,34 @@
-// --- PASTE YOUR MODEL JSON HERE ---
 const model = {
-  "weights": [...],
-  "mins": [...],
-  "maxs": [...],
-  "eduLevels": [...]
+  // 👉 PASTE YOUR JSON HERE (weights, mins, maxs, eduLevels)
 };
 
-// --- Encoding ---
+// --- Sigmoid ---
+function sigmoid(z) {
+  return 1 / (1 + Math.exp(-z));
+}
+
+// --- Dot Product ---
+function dot(a, b) {
+  let sum = 0;
+  for (let i = 0; i < a.length; i++) {
+    sum += a[i] * b[i];
+  }
+  return sum;
+}
+
+// --- Normalize (IMPORTANT FIX) ---
+function normalize(features) {
+  return features.map((val, i) => {
+    if (model.maxs[i] === model.mins[i]) return val;
+    return (val - model.mins[i]) / (model.maxs[i] - model.mins[i]);
+  });
+}
+
+// --- Encode Input (ORDER MUST MATCH TRAINING) ---
 function encodeInput(age, gender, education, marital, income, credit) {
   let features = [];
 
+  // SAME ORDER as training
   features.push(age);
   features.push(income);
   features.push(credit);
@@ -24,30 +43,17 @@ function encodeInput(age, gender, education, marital, income, credit) {
   return normalize(features);
 }
 
-// --- Normalization (same as training!) ---
-
-
 // --- Prediction ---
-function sigmoid(z) {
-  return 1 / (1 + Math.exp(-z));
-}
-
-function dot(a, b) {
-  return a.reduce((sum, val, i) => sum + val * b[i], 0);
-}
-
 function predict(features) {
   const z = dot(features, model.weights);
   const prob = sigmoid(z);
+
+  console.log("Z:", z, "Prob:", prob); // debug
+
   return prob >= 0.5 ? "Approved ✅" : "Denied ❌";
 }
-function normalize(features) {
-  return features.map((val, i) => {
-    if (model.maxs[i] === model.mins[i]) return val;
-    return (val - model.mins[i]) / (model.maxs[i] - model.mins[i]);
-  });
-}
-// --- Form Handling ---
+
+// --- Form ---
 document.getElementById("loanForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
@@ -59,6 +65,8 @@ document.getElementById("loanForm").addEventListener("submit", function(e) {
   const credit = Number(document.getElementById("credit").value);
 
   const features = encodeInput(age, gender, education, marital, income, credit);
+
+  console.log("Features:", features);
 
   const result = predict(features);
 
