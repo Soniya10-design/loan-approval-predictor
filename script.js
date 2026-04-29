@@ -1,7 +1,9 @@
 // --- PASTE YOUR MODEL JSON HERE ---
 const model = {
-  weights: [/* paste weights here */],
-  eduLevels: ["High School", "Associate's", "Bachelor's", "Master's", "Doctoral"]
+  "weights": [...],
+  "mins": [...],
+  "maxs": [...],
+  "eduLevels": [...]
 };
 
 // --- Encoding ---
@@ -19,14 +21,11 @@ function encodeInput(age, gender, education, marital, income, credit) {
     features.push(education === level ? 1 : 0);
   });
 
-  return normalizeSingle(features);
+  return normalize(features);
 }
 
 // --- Normalization (same as training!) ---
-function normalizeSingle(x) {
-  // Simple scaling assumption (can improve if needed)
-  return x.map(v => v / 100);
-}
+
 
 // --- Prediction ---
 function sigmoid(z) {
@@ -42,7 +41,12 @@ function predict(features) {
   const prob = sigmoid(z);
   return prob >= 0.5 ? "Approved ✅" : "Denied ❌";
 }
-
+function normalize(features) {
+  return features.map((val, i) => {
+    if (model.maxs[i] === model.mins[i]) return val;
+    return (val - model.mins[i]) / (model.maxs[i] - model.mins[i]);
+  });
+}
 // --- Form Handling ---
 document.getElementById("loanForm").addEventListener("submit", function(e) {
   e.preventDefault();
